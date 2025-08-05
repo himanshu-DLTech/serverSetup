@@ -1,0 +1,14 @@
+[Unit]
+Description=Monkshu service
+After=network-online.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=/usr/bin/env node /root/crashguard/crashguard.js
+
+[Install]
+WantedBy=multi-user.target

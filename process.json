@@ -1,0 +1,4 @@
+[
+   {"process": ["/root/monkshu/frontend/server/cluster.sh"]},
+   {"process": ["/root/monkshu/backend/server/cluster.sh"]}
+]
