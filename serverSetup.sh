@@ -70,6 +70,13 @@ else
     echo "✅ monkshu already exists. Skipping clone."
 fi
 
+if [ ! -d "/root/xforge" ]; then
+    echo "📥 Cloning xforge repo..."
+    git clone https://github.com/TekMonksGitHub/xforge.git
+else
+    echo "✅ xforge already exists. Skipping clone."
+fi
+
 # --- Copy Configuration Files ---
 echo "📁 Copying configuration files..."
 cp ~/serverSetup/process.json /root/crashguard/conf/
@@ -99,7 +106,10 @@ certbot certonly --standalone
 # --- Final Systemd Instructions ---
 echo "📝 Final Step:"
 echo "✅ Setup Complete!"
-echo "👉 Now, enable and start the Monkshu service manually:"
+echo "👉 Now, make a webbundle using xforge then enable and start the Monkshu service manually:"
+echo "   ➤ cd xforge"
+echo "   ➤ ./xforge -c -f /root/monkshu/build/webbundle.xf.js"
+echo "   ➤ cd /root/"
 echo "   ➤ sudo systemctl enable monkshu.service"
 echo "   ➤ sudo systemctl start monkshu.service"
 echo "🎉 All done for $APP_NAME!"
