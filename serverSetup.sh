@@ -86,8 +86,14 @@ cp ~/serverSetup/monkshu.service /usr/lib/systemd/system/
 echo "🔗 Creating symbolic link between monkshu and $APP_NAME..."
 /root/monkshu/mklink.sh $APP_NAME
 
-echo "📦 Installing monkshu..."
+echo "📦 Installing monkshu dependencies..."
 /root/monkshu/install.sh
+
+echo "📦 Installing '$APP_NAME' dependencies..."
+/root/'$APP_NAME'/install.sh
+
+echo "📦 Installing xforge dependencies..."
+/root/xforge/install.sh
 
 # --- Optional Step (Windows Install Script) ---
 echo "⚠️  NOTE: If '$APP_NAME' has a Windows install script, run '/root/$APP_NAME/install.sh.bat' on a Windows machine if needed."
@@ -106,7 +112,7 @@ certbot certonly --standalone
 # --- Final Systemd Instructions ---
 echo "📝 Final Step:"
 echo "✅ Setup Complete!"
-echo "👉 Now, make a webbundle using xforge then enable and start the Monkshu service manually:"
+echo "👉 Now, make a web bundle using xforge, then enable and start the Monkshu service manually:"
 echo "   ➤ cd xforge"
 echo "   ➤ ./xforge -c -f /root/monkshu/build/webbundle.xf.js"
 echo "   ➤ cd /root/"
