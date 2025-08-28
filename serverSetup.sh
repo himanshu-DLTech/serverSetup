@@ -89,8 +89,8 @@ echo "🔗 Creating symbolic link between monkshu and $APP_NAME..."
 echo "📦 Installing monkshu dependencies..."
 /root/monkshu/install.sh
 
-echo "📦 Installing '$APP_NAME' dependencies..."
-/root/'$APP_NAME'/install.sh
+echo "📦 Installing $APP_NAME dependencies..."
+"/root/$APP_NAME/install.sh" || "/root/$APP_NAME/install.sh.bat"
 
 echo "📦 Installing xforge dependencies..."
 /root/xforge/install.sh
