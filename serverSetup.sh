@@ -3,6 +3,9 @@
 # Shell Script to Set Up a Monkshu-Based Product Server
 # Usage: sudo ./serverSetup.sh
 
+# declare script directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # --- Load Environment Variables ---
 if [ -f "./.env" ]; then
     source ./.env
@@ -48,6 +51,21 @@ else
     echo "👤 Running setup for user $APP_USER with home directory $APP_HOME"
 fi
 
+# --- Final Steps (Executed only after manual config) ---
+if [ "$1" == "--final" ]; then
+    echo "========================================================"
+    echo "⚡ Executing final steps..."
+    cd "$APP_HOME/xforge"
+    ./xforge -c -f "$APP_HOME/monkshu/build/webbundle.xf.js"
+
+    cd "$APP_HOME"
+    sudo systemctl enable monkshu.service
+    sudo systemctl start monkshu.service
+
+    echo "🎉 All done for $APP_NAME!"
+    echo "========================================================"
+    exit 0
+fi
 
 echo "🚀 Starting Setup for $APP_NAME Product Server"
 echo "========================================================"
@@ -106,17 +124,23 @@ else
     echo "✅ xforge already exists. Skipping clone."
 fi
 
+# Edit cloned repo permissions to the give user
+echo "🔐 Setting ownership of cloned repos to $APP_USER..."
+sudo chown -R "$APP_USER:$APP_USER" \
+  "$APP_HOME/crashguard" "$APP_HOME/$APP_NAME" "$APP_HOME/monkshu" "$APP_HOME/xforge"
+
 # --- Copy Configuration Files ---
 echo "📁 Copying configuration files..."
 
 # --- Generate process.json dynamically ---
 echo "⚙️  Generating process.json for $APP_USER..."
-sudo sed "s|APP_HOME|$APP_HOME|g" ./process.json.template > "$APP_HOME/crashguard/conf/process.json"
+sudo sed "s|APP_HOME|$APP_HOME|g" "$SCRIPT_DIR/process.json.template" > "$APP_HOME/crashguard/conf/process.json"
 
 # Replace APP_USER and APP_HOME in service file dynamically
+echo "⚙️  Generating monkshu.service for $APP_USER..."
 sudo sed -e "s|APP_HOME|$APP_HOME|g" \
          -e "s|APP_USER|$APP_USER|g" \
-    ./monkshu.service.template > /usr/lib/systemd/system/monkshu.service
+    "$SCRIPT_DIR/monkshu.service.template" > /usr/lib/systemd/system/monkshu.service
 
 # --- Linking and Installing ---
 echo "🔗 Creating symbolic link between monkshu and $APP_NAME..."
@@ -131,29 +155,21 @@ echo "📦 Installing $APP_NAME dependencies..."
 echo "📦 Installing xforge dependencies..."
 "$APP_HOME/xforge/install.sh"
 
+# Edit installed module permissions to the give user
+echo "🔐 Setting ownership of installed modules to $APP_USER..."
+sudo chown -R "$APP_USER:$APP_USER" \
+  "$APP_HOME/crashguard" "$APP_HOME/packages*json" "$APP_HOME/node_modules"
+
 # --- SSL Certificate ---
 echo "🔐 Installing Certbot..."
-apt-get install certbot -y
+sudo apt-get install certbot -y
 
 echo "⚙️  Running Certbot in standalone mode..."
-certbot certonly --standalone
+sudo certbot certonly --standalone
 
 # --- Manual Configuration Instructions ---
 echo "📝 Manual Configuration Required:"
 echo "⚠️  Please configure Monkshu, Xforge, and $APP_NAME as needed."
 echo "👉 After completing manual configuration, re-run this script with --final flag."
-
-# --- Final Steps (Executed only after manual config) ---
-if [ "$1" == "--final" ]; then
-    echo "⚡ Executing final steps..."
-    cd "$APP_HOME/xforge"
-    ./xforge -c -f "$APP_HOME/monkshu/build/webbundle.xf.js"
-
-    cd "$APP_HOME"
-    systemctl enable monkshu.service
-    systemctl start monkshu.service
-
-    echo "🎉 All done for $APP_NAME!"
-fi
 
 echo "========================================================"
