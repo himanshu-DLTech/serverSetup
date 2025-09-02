@@ -1,86 +1,65 @@
-# 🚀 Server Setup for Monkshu-Based App
 
-This setup automates the environment preparation and deployment of any [Monkshu](https://github.com/TekMonksGitHub/monkshu)-based web application (like `neuranet`) on a **fresh Linux VM**.
+# Server Setup Script
 
-## 📁 Folder Structure
-    serverSetup/
-    ├── serverSetup.sh         # Main setup script
-    ├── process.json           # Process configuration for crashguard
-    ├── monkshu.service        # Systemd service definition for Monkshu
+This repository provides a shell script (`serverSetup.sh`) to set up a Monkshu-based product server.
 
-## ⚙️ Prerequisites
-- Fresh **Ubuntu/Debian-based VM**
-- Internet access
-- User with `sudo` privileges
-- Make sure `git` is available
+## Version to use
+You can use the following versions
+- [server_setup_v0.0.1](https://github.com/himanshu-DLTech/serverSetup/tree/server_setup_v0.0.1) (LTS)
 
-## 🛠️ Setup Instructions
+## 📌 Prerequisites
 
-### 1. 🔽 Clone or Transfer the Folder to Your VM
+- Ubuntu/Debian-based Linux system
+- `sudo` access
+- Internet connection
 
-You can clone this setup repo or use `scp` to move it to the VM:
+## ⚙️ Environment Variables
 
-    scp -r serverSetup/ youruser@your-vm-ip:~/
+Create a `.env` file in the same directory as the script with the following variables:
 
-Or if it's on GitHub
+```bash
+APP_NAME=myApp
+APP_USER=myuser
+```
 
-    git clone <your-repo-url>
-    cd serverSetup
+## 🚀 Usage
 
+Run the script with root privileges:
 
-### 2. 🔑 Make the Script Executable
+```bash
+sudo ./serverSetup.sh
+```
 
-    cd serverSetup
-    chmod +x serverSetup.sh
+After manual configuration, you can finalize the setup with:
 
+```bash
+sudo ./serverSetup.sh --final
+```
 
-### 3. 🚀 Run the Script with Your App Name
+## 🛠 Features
 
-> Replace `<AppName>` with the name of your app repo (e.g., `neuranet`, `yourappname`, etc.)
+- Installs required dependencies (Node.js, npm, Java, Tesseract OCR, etc.)
+- Clones necessary repositories (`crashguard`, `monkshu`, `xforge`, and your product)
+- Configures `process.json` and `monkshu.service`
+- Sets up SSL certificates via **Certbot**
+- Finalizes server setup with `systemctl`
 
-    sudo ./serverSetup.sh <AppName>
+## 📂 Repository Structure
 
-or (for logs)
+```
+serverSetup.sh
+.env (to be created)
+process.json.template
+monkshu.service.template
+```
 
-    sudo ./serverSetup.sh <AppName> | tee /root/setup.log
+## ⚠️ Manual Configuration
 
+Some steps (like configuring Monkshu, Xforge, and your app) must be done manually before re-running the script with `--final`.
 
-🧠 Example:
+## 🎉 Completion
 
-    sudo ./serverSetup.sh neuranet
-
-or
-
-    sudo ./serverSetup.sh neuranet | tee /root/setup.log
-
-
-### 4. 🔐 Certbot SSL Setup
-
-The script will automatically run:
-
-    sudo certbot certonly --standalone
-
-
-> 📝 You’ll be prompted for a domain and email — make sure your domain points to the VM's IP.
-
-
-### 5. ⚙️ Final Step: Enable & Start Monkshu Service
-
-Please make all config changes required for the monkshu and the app.
-If you completed all the configuration changes, the setup is done. Now run:
-
-    cd /root/xforge/ && ./xforge -c -f /root/monkshu/build/webbundle.xf.js
-    sudo systemctl enable monkshu.service
-    sudo systemctl start monkshu.service
-
+Once everything is configured and finalized, the service will be enabled and started automatically.
 
 ## 🧪 Test
-
 Visit your deployed app via the domain or IP you've configured.
-
-
-## 🧩 Notes
-
-* `process.json` and `monkshu.service` must remain in the `serverSetup/` folder.
-* If your app has a Windows batch script (`install.sh.bat`), run that on Windows only if needed.
-* Modify `monkshu.service` if your service needs custom ports or paths.

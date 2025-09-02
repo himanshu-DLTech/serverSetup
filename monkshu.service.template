@@ -7,8 +7,9 @@ StartLimitIntervalSec=0
 Type=simple
 Restart=always
 RestartSec=1
-User=root
-ExecStart=/usr/bin/env node /root/crashguard/crashguard.js
+User=APP_USER
+ExecStart=/usr/bin/env node APP_HOME/crashguard/crashguard.js
+WorkingDirectory=APP_HOME
 
 [Install]
 WantedBy=multi-user.target

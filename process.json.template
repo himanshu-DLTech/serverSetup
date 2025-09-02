@@ -1,0 +1,4 @@
+[
+   {"process": ["APP_HOME/monkshu/frontend/server/server.sh"]},
+   {"process": ["APP_HOME/monkshu/backend/server/server.sh"]}
+]
