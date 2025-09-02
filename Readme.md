@@ -66,7 +66,8 @@ The script will automatically run:
 
 ### 5. ⚙️ Final Step: Enable & Start Monkshu Service
 
-After all the configuration changes, the setup is done. Now run:
+Please make all config changes required for the monkshu and the app.
+If you completed all the configuration changes, the setup is done. Now run:
 
     cd /root/xforge/ && ./xforge -c -f /root/monkshu/build/webbundle.xf.js
     sudo systemctl enable monkshu.service
