@@ -60,7 +60,7 @@ if [ "$1" == "--final" ]; then
 
     cd "$APP_HOME"
     sudo systemctl enable monkshu.service
-    sudo systemctl start monkshu.service
+    sudo systemctl restart monkshu.service
 
     echo "🎉 All done for $APP_NAME!"
     echo "========================================================"
