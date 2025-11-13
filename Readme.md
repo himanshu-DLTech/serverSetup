@@ -5,7 +5,8 @@ This repository provides a shell script (`serverSetup.sh`) to set up a Monkshu-b
 
 ## Version to use
 You can use the following versions
-- [server_setup_v0.0.1](https://github.com/himanshu-DLTech/serverSetup/tree/server_setup_v0.0.1) (LTS)
+- [server_Setup_v0.0.2](https://github.com/himanshu-DLTech/serverSetup/releases/tag/server_setup_v0.0.2) (LTS)
+- [server_setup_v0.0.1](https://github.com/himanshu-DLTech/serverSetup/tree/server_setup_v0.0.1)
 
 ## 📌 Prerequisites
 
